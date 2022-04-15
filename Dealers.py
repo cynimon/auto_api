@@ -1,5 +1,7 @@
 from sqlalchemy.orm import relationship
-from main import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 class Dealers(db.Model):

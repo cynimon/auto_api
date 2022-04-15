@@ -1,70 +1,96 @@
 # auto_api
 REST API для продажи машин автодилерами
 
-###Cars
+### Cars
 
->> **POST** | /cars
->
-> Создает новую запись в таблице Cars
+> **POST** | /cars
 
-'''json
+#### Создает новую запись в таблице Cars
+
+- Пример запроса:
+
+
+```json
 {
-	"brand": "Volvo",
-	"amount": "5",
-	"price": "26000"
+    "brand": "Volvo",
+    "amount": "5",
+    "price": "26000"
 }
-'''
+```
+- Ответ:
+```json
+{"message": "Машина марки Volvo добавлена в базу"}
+```
+> **GET** | /cars
 
-> >**GET** | /cars
-> 
-> Считывает все записи из таблицы Cars
+#### Считывает все записи из таблицы Cars
 
-> >**GET** | /cars/<car_id>
-> 
-> Считывает запись из таблицы Cars с <car_id>
+- Пример запроса:
 
-> >**PUT** | /cars/<car_id>
+```json
+{
+    "brand": "Volvo",
+    "amount": "5",
+    "price": "26000"
+}
+```
+
+> **GET** | /cars/<car_id>
+
+#### Считывает запись из таблицы Cars с <car_id>
+
+- Пример запроса:
+
+```json
+{
+    "brand": "Volvo",
+    "amount": "5",
+    "price": "26000"
+}
+```
+
+> **PUT** | /cars/<car_id>
 > 
 > Изменяет запись в таблице Cars с <car_id>
 
-###Dealers
+### Dealers
 
-> >**POST** | /dealers
+> **POST** | /dealers
 > 
 > Создает новую запись в таблице Dealers
 
 
-> >**GET** | /dealers
+> **GET** | /dealers
 > 
 > Выводит все записи из таблицы Dealers
 
 
-> >**GET** | /dealers/<dealer_id>
+> **GET** | /dealers/<dealer_id>
 > 
 > Считывает запись из таблицы Dealers с <dealer_id>
 
 
-> >**DELETE** | /dealers/<dealer_id>
+> **DELETE** | /dealers/<dealer_id>
 > 
 > Удаляет запись из таблицы Dealers с <dealer_id>
 
-###Deals
+### Deals
 
->> **POST** | /deals
+> **POST** | /deals
 > 
 > Создает новую запись в таблице Deals
 
 
->> **GET** | /deals
+> **GET** | /deals
 > 
 > Выводит все записи из таблицы Deals
 
 
->> **GET** | /deals/<deal_id>
+> **GET** | /deals/<deal_id>
 > 
 > Считывает запись из таблицы Deals с <deal_id>
 
 
-> >**DELETE** | /deals/<deal_id>
+> **DELETE** | /deals/<deal_id>
 > 
 > Удаляет запись из таблицы Deals с <deal_id>
