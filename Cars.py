@@ -1,7 +1,5 @@
 from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from main import db
 
 
 class Cars(db.Model):

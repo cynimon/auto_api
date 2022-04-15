@@ -1,15 +1,37 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import werkzeug.exceptions
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://sasha:11qa@localhost:5432/auto_api"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# установка сессии
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# импорт после создания db, чтобы избежать ошибки импорта
 from Cars import Cars
 from Dealers import Dealers
 from Deals import Deals
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://sasha:11qa@localhost:5432/auto_api"
-# установка сессии
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+'''Обработчик кодов ошибок HTTP'''
+
+
+@app.errorhandler(werkzeug.exceptions.BadRequest)
+def handle_bad_request(e):
+    return 'Неверный запрос', 400
+
+
+@app.errorhandler(werkzeug.exceptions.NotFound)
+def hande_not_found(e):
+    return 'Таких данных не существует', 404
+
+
+@app.errorhandler(werkzeug.exceptions.InternalServerError)
+def hande_not_found(e):
+    return 'Ошибка сервера', 500
+
 
 '''Выполнение сделок - изменения в связанных с Deals таблицах'''
 
@@ -47,8 +69,6 @@ def with_cars():
             db.session.add(new_car)
             db.session.commit()
             return {'message': f'Машина марки {new_car.brand} добавлена в базу'}
-        else:
-            return {'error': 'Данные предоставлены не в формате JSON'}
     elif request.method == 'GET':
         cars = Cars.query.all()
         results = [
@@ -101,8 +121,6 @@ def with_dealers():
             db.session.add(new_dealer)
             db.session.commit()
             return {"message": f"Дилер {new_dealer.name} добавлен в базу"}
-        else:
-            return {"error": "Данные предоставлены не в формате JSON"}
     elif request.method == 'GET':
         dealers = Dealers.query.all()
         results = [
@@ -154,8 +172,6 @@ def with_deals():
             update_dealers_cars(request.method, data)
             db.session.commit()
             return {"message": "Сделка добавлена в базу"}
-        else:
-            return {"error": "Данные предоставлены не в формате JSON"}
     elif request.method == 'GET':
         deals = Deals.query.all()
         results = [{
