@@ -1,4 +1,4 @@
-cars
+'''requests for cars'''
 {
 	"brand": "Volvo",
 	"amount": "5",
@@ -29,7 +29,7 @@ cars
 	"price": "15000"
 }
 
-dealers
+'''requests for dealers'''
 {
 	"name": "Katten",
 	"cars_sold": "0",
@@ -60,7 +60,7 @@ dealers
 	"earnings": "90000"
 }
 
-deals 
+'''requests for deals'''
 {
 	"car": "1",
 	"dealer": "2",

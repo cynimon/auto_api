@@ -11,8 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://sasha:11qa@localhost:5432/
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-'''выполнение сделок - добавление и удаление, 
-изменения в связанных таблицах'''
+'''Выполнение сделок - изменения в связанных с Deals таблицах'''
 
 
 def update_dealers_cars(method, data):
@@ -35,6 +34,8 @@ def update_dealers_cars(method, data):
 
 
 '''endpoint /cars'''
+
+'''Новая запись в Cars на POST, вывод всех записей Cars на GET'''
 
 
 @app.route('/cars', methods=['POST', 'GET'])
@@ -62,6 +63,8 @@ def with_cars():
 
 '''endpoint /cars/<car_id>'''
 
+'''Вывод записи по id на GET, редактирование на PUT'''
+
 
 @app.route('/cars/<car_id>', methods=['GET', 'PUT'])
 def with_car(car_id):
@@ -85,6 +88,8 @@ def with_car(car_id):
 
 
 '''endpoint /dealers'''
+
+'''Новая запись в Dealers на POST, вывод всех записей Dealers на GET'''
 
 
 @app.route('/dealers', methods=['POST', 'GET'])
@@ -113,6 +118,8 @@ def with_dealers():
 
 '''endpoint /dealers/<dealer_id>'''
 
+'''Вывод записи по id на GET, удаление на DELETE'''
+
 
 @app.route('/dealers/<dealer_id>', methods=['GET', 'DELETE'])
 def with_dealer(dealer_id):
@@ -132,6 +139,8 @@ def with_dealer(dealer_id):
 
 
 '''endpoint /deals'''
+
+'''Новая запись в Deals на POST, вывод всех записей Deals на GET'''
 
 
 @app.route('/deals', methods=['POST', 'GET'])
@@ -160,6 +169,8 @@ def with_deals():
 
 
 '''endpoin /deals/<deal_id>'''
+
+'''Вывод записи по id на GET, удаление на DELETE'''
 
 
 @app.route('/deals/<deal_id>', methods=['GET', 'DELETE'])
