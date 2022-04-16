@@ -5,7 +5,7 @@ REST API для продажи машин автодилерами
 >- [Cars](https://github.com/cynimon/auto_api#cars)
 >- [Dealers](https://github.com/cynimon/auto_api#dealers)
 >- [Deals](https://github.com/cynimon/auto_api#deals)
->- [Обработка ошибок](https://github.com/cynimon/auto_api##обработка-ошибок)
+>- [Обработка ошибок](https://github.com/cynimon/auto_api#обработка-ошибок)
 
 ### Cars
 
