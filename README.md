@@ -97,9 +97,9 @@ REST API для продажи машин автодилерами
 
 ```json
 {
-	"name": "Katten",
-	"cars_sold": "0",
-	"earnings": "0"
+    "name": "Katten",
+    "cars_sold": "0",
+    "earnings": "0"
 }
 ```
 - Ответ:
