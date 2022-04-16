@@ -7,6 +7,18 @@ REST API для продажи машин автодилерами
 >- [Deals](https://github.com/cynimon/auto_api#deals)
 >- [Обработка ошибок](https://github.com/cynimon/auto_api#обработка-ошибок)
 
+### Запуск
+- При первом запуске в PostgrSQL необходимо создать таблицу "auto_api".
+
+- Далее в командной строке:
+```shell
+$ export FLASK_APP=main.py
+$ flask db init
+$ flask db migrate
+$ flask db upgrade
+$ flask run
+```
+
 ### Cars
 
 > **POST** | /cars
