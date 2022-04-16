@@ -20,17 +20,17 @@ from Deals import Deals
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(e):
-    return 'Неверный запрос', 400
+    return {"Error":"Неверный запрос"}, 400
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)
 def hande_not_found(e):
-    return 'Таких данных не существует', 404
+    return {"Error": "Таких данных не существует"}, 404
 
 
 @app.errorhandler(werkzeug.exceptions.InternalServerError)
 def hande_not_found(e):
-    return 'Ошибка сервера', 500
+    return {"Error": "Ошибка сервера"}, 500
 
 
 '''Выполнение сделок - изменения в связанных с Deals таблицах'''
