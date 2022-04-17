@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import werkzeug.exceptions
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://sasha:11qa@localhost:5432/auto_api"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -14,6 +15,7 @@ migrate = Migrate(app, db)
 from Cars import Cars
 from Dealers import Dealers
 from Deals import Deals
+import handle_data as hd
 
 """Обработчик кодов ошибок HTTP"""
 
@@ -33,45 +35,6 @@ def hande_not_found(e):
     return {"Error": "Ошибка сервера"}, 500
 
 
-"""Выполнение сделок - изменения в связанных с Deals таблицах"""
-
-
-def update_dealers_cars(method, data):
-    dealer = Dealers.query.get(int(data['dealer_id']))
-    car = Cars.query.get(int(data['car_id']))
-
-    if method == 'POST':
-        dealer.cars_sold += int(data['amount'])
-        dealer.earnings += int(data['summa'])
-        car.amount -= int(data['amount'])
-    elif method == 'DELETE':
-        dealer.cars_sold -= int(data['amount'])
-        dealer.earnings -= int(data['summa'])
-        car.amount += int(data['amount'])
-
-    db.session.add(dealer)
-    db.session.add(car)
-    db.session.commit()
-    return
-
-
-"""Получение модели из базы по id"""
-
-
-def get_dict_response(model, model_id):
-    anymodel = model.query.get_or_404(model_id)
-    return anymodel, anymodel.to_json()
-
-
-"""Получение всех записей модели"""
-
-
-def get_all_rows(model):
-    allmod = model.query.all()
-    templi = [onemod.to_json() for onemod in allmod]
-    return templi
-
-
 '''endpoint /cars'''
 
 """Новая запись в Cars на POST, вывод всех записей Cars на GET"""
@@ -87,7 +50,7 @@ def with_cars():
             db.session.commit()
             return {'message': f'Машина марки {new_car.brand} добавлена в базу'}
     elif request.method == 'GET':
-        response = get_all_rows(Cars)
+        response = hd.get_all_rows(Cars)
         return {"count": len(response), "brands": response}
 
 
@@ -98,7 +61,7 @@ def with_cars():
 
 @app.route('/cars/<car_id>', methods=['GET', 'PUT'])
 def with_car(car_id):
-    car, response = get_dict_response(Cars, car_id)
+    car, response = hd.get_dict_response(Cars, car_id)
     if request.method == 'GET':
         return {"message": "Успешно", "car": response}
     elif request.method == 'PUT':
@@ -126,7 +89,7 @@ def with_dealers():
             db.session.commit()
             return {"message": f"Дилер {new_dealer.name} добавлен в базу"}
     elif request.method == 'GET':
-        response = get_all_rows(Dealers)
+        response = hd.get_all_rows(Dealers)
         earned = sum([int(dealer['earnings']) for dealer in response])
         return {"count": len(response), "dealers": response, "earned": earned}
 
@@ -138,7 +101,7 @@ def with_dealers():
 
 @app.route('/dealers/<dealer_id>', methods=['GET', 'DELETE'])
 def with_dealer(dealer_id):
-    dealer, response = get_dict_response(Dealers, dealer_id)
+    dealer, response = hd.get_dict_response(Dealers, dealer_id)
     if request.method == 'GET':
         return {"message": "Успешно", "dealer": response}
     elif request.method == 'DELETE':
@@ -160,11 +123,11 @@ def with_deals():
             new_deal = Deals(car_id=data['car_id'], dealer_id=data['dealer_id'], amount=data['amount'],
                              summa=data['summa'])
             db.session.add(new_deal)
-            update_dealers_cars(request.method, data)
+            hd.update_dealers_cars(request.method, data)
             db.session.commit()
             return {"message": "Сделка добавлена в базу"}
     elif request.method == 'GET':
-        response = get_all_rows(Deals)
+        response = hd.get_all_rows(Deals)
         earned = sum([int(deal['summa']) for deal in response])
         return {"count": len(response), "deals": response, "earned": earned}
 
@@ -176,11 +139,11 @@ def with_deals():
 
 @app.route('/deals/<deal_id>', methods=['GET', 'DELETE'])
 def with_deal(deal_id):
-    deal, response = get_dict_response(Deals, deal_id)
+    deal, response = hd.get_dict_response(Deals, deal_id)
     if request.method == 'GET':
         return {"message": "Успешно", "deals": response}
     elif request.method == 'DELETE':
-        update_dealers_cars(request.method, response)
+        hd.update_dealers_cars(request.method, response)
         db.session.delete(deal)
         db.session.commit()
         return {"message": f"Сделка удалёна"}
