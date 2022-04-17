@@ -15,7 +15,7 @@ from Cars import Cars
 from Dealers import Dealers
 from Deals import Deals
 
-'''Обработчик кодов ошибок HTTP'''
+"""Обработчик кодов ошибок HTTP"""
 
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
@@ -33,7 +33,7 @@ def hande_not_found(e):
     return {"Error": "Ошибка сервера"}, 500
 
 
-'''Выполнение сделок - изменения в связанных с Deals таблицах'''
+"""Выполнение сделок - изменения в связанных с Deals таблицах"""
 
 
 def update_dealers_cars(method, data):
@@ -55,7 +55,7 @@ def update_dealers_cars(method, data):
     return
 
 
-'''Получение модели из базы по id'''
+"""Получение модели из базы по id"""
 
 
 def get_dict_response(model, model_id):
@@ -63,7 +63,7 @@ def get_dict_response(model, model_id):
     return anymodel, anymodel.to_json()
 
 
-'''Получение всех записей модели'''
+"""Получение всех записей модели"""
 
 
 def get_all_rows(model):
@@ -74,7 +74,7 @@ def get_all_rows(model):
 
 '''endpoint /cars'''
 
-'''Новая запись в Cars на POST, вывод всех записей Cars на GET'''
+"""Новая запись в Cars на POST, вывод всех записей Cars на GET"""
 
 
 @app.route('/cars', methods=['POST', 'GET'])
@@ -93,7 +93,7 @@ def with_cars():
 
 '''endpoint /cars/<car_id>'''
 
-'''Вывод записи по id на GET, редактирование на PUT'''
+"""Вывод записи по id на GET, редактирование на PUT"""
 
 
 @app.route('/cars/<car_id>', methods=['GET', 'PUT'])
@@ -113,7 +113,7 @@ def with_car(car_id):
 
 '''endpoint /dealers'''
 
-'''Новая запись в Dealers на POST, вывод всех записей Dealers на GET'''
+"""Новая запись в Dealers на POST, вывод всех записей Dealers на GET"""
 
 
 @app.route('/dealers', methods=['POST', 'GET'])
@@ -133,7 +133,7 @@ def with_dealers():
 
 '''endpoint /dealers/<dealer_id>'''
 
-'''Вывод записи по id на GET, удаление на DELETE'''
+"""Вывод записи по id на GET, удаление на DELETE"""
 
 
 @app.route('/dealers/<dealer_id>', methods=['GET', 'DELETE'])
@@ -149,7 +149,7 @@ def with_dealer(dealer_id):
 
 '''endpoint /deals'''
 
-'''Новая запись в Deals на POST, вывод всех записей Deals на GET'''
+"""Новая запись в Deals на POST, вывод всех записей Deals на GET"""
 
 
 @app.route('/deals', methods=['POST', 'GET'])
@@ -171,7 +171,7 @@ def with_deals():
 
 '''endpoin /deals/<deal_id>'''
 
-'''Вывод записи по id на GET, удаление на DELETE'''
+"""Вывод записи по id на GET, удаление на DELETE"""
 
 
 @app.route('/deals/<deal_id>', methods=['GET', 'DELETE'])
