@@ -18,4 +18,12 @@ class Dealers(db.Model):
         self.earnings = earnings
 
     def __repr__(self):
-        return f'<Dealer {self.name}'
+        return f'Dealer {self.name}'
+
+    def to_json(self):
+        result = {
+            'name': self.name,
+            'cars_sold': self.cars_sold,
+            'earnings': self.earnings
+        }
+        return result

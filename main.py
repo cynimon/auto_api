@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 import werkzeug.exceptions
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/auto_api"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://sasha:11qa@localhost:5432/auto_api"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # установка сессии
 db = SQLAlchemy(app)
@@ -20,7 +20,7 @@ from Deals import Deals
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(e):
-    return {"Error":"Неверный запрос"}, 400
+    return {"Error": "Неверный запрос"}, 400
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)
@@ -55,6 +55,23 @@ def update_dealers_cars(method, data):
     return
 
 
+'''Получение модели из базы по id'''
+
+
+def get_dict_response(model, model_id):
+    anymodel = model.query.get_or_404(model_id)
+    return anymodel, anymodel.to_json()
+
+
+'''Получение всех записей модели'''
+
+
+def get_all_rows(model):
+    allmod = model.query.all()
+    templi = [onemod.to_json() for onemod in allmod]
+    return templi
+
+
 '''endpoint /cars'''
 
 '''Новая запись в Cars на POST, вывод всех записей Cars на GET'''
@@ -70,15 +87,8 @@ def with_cars():
             db.session.commit()
             return {'message': f'Машина марки {new_car.brand} добавлена в базу'}
     elif request.method == 'GET':
-        cars = Cars.query.all()
-        results = [
-            {
-                "brand": car.brand,
-                "amount": car.amount,
-                "price": car.price
-            } for car in cars]
-
-        return {"count": len(results), "brands": results}
+        response = get_all_rows(Cars)
+        return {"count": len(response), "brands": response}
 
 
 '''endpoint /cars/<car_id>'''
@@ -88,14 +98,8 @@ def with_cars():
 
 @app.route('/cars/<car_id>', methods=['GET', 'PUT'])
 def with_car(car_id):
-    car = Cars.query.get_or_404(car_id)
-
+    car, response = get_dict_response(Cars, car_id)
     if request.method == 'GET':
-        response = {
-            "brand": car.brand,
-            "amount": car.amount,
-            "price": car.price
-        }
         return {"message": "Успешно", "car": response}
     elif request.method == 'PUT':
         data = request.get_json()
@@ -122,16 +126,9 @@ def with_dealers():
             db.session.commit()
             return {"message": f"Дилер {new_dealer.name} добавлен в базу"}
     elif request.method == 'GET':
-        dealers = Dealers.query.all()
-        results = [
-            {
-                "name": dealer.name,
-                "cars_sold": dealer.cars_sold,
-                "earnings": dealer.earnings
-            } for dealer in dealers]
-        earned = sum([int(dealer.earnings) for dealer in dealers])
-
-        return {"count": len(results), "dealers": results, "earned": earned}
+        response = get_all_rows(Dealers)
+        earned = sum([int(dealer['earnings']) for dealer in response])
+        return {"count": len(response), "dealers": response, "earned": earned}
 
 
 '''endpoint /dealers/<dealer_id>'''
@@ -141,14 +138,8 @@ def with_dealers():
 
 @app.route('/dealers/<dealer_id>', methods=['GET', 'DELETE'])
 def with_dealer(dealer_id):
-    dealer = Dealers.query.get_or_404(dealer_id)
-
+    dealer, response = get_dict_response(Dealers, dealer_id)
     if request.method == 'GET':
-        response = {
-            "name": dealer.name,
-            "cars_sold": dealer.cars_sold,
-            "earnings": dealer.earnings
-        }
         return {"message": "Успешно", "dealer": response}
     elif request.method == 'DELETE':
         db.session.delete(dealer)
@@ -173,15 +164,9 @@ def with_deals():
             db.session.commit()
             return {"message": "Сделка добавлена в базу"}
     elif request.method == 'GET':
-        deals = Deals.query.all()
-        results = [{
-            "car_id": deal.car_id,
-            "dealer_id": deal.dealer_id,
-            "amount": deal.amount,
-            "summa": deal.summa
-        } for deal in deals]
-        earned = sum([int(deal.summa) for deal in deals])
-        return {"count": len(results), "deals": results, "earned": earned}
+        response = get_all_rows(Deals)
+        earned = sum([int(deal['summa']) for deal in response])
+        return {"count": len(response), "deals": response, "earned": earned}
 
 
 '''endpoin /deals/<deal_id>'''
@@ -191,13 +176,7 @@ def with_deals():
 
 @app.route('/deals/<deal_id>', methods=['GET', 'DELETE'])
 def with_deal(deal_id):
-    deal = Deals.query.get_or_404(deal_id)
-    response = {
-        "car_id": deal.car_id,
-        "dealer_id": deal.dealer_id,
-        "amount": deal.amount,
-        "summa": deal.summa
-    }
+    deal, response = get_dict_response(Deals, deal_id)
     if request.method == 'GET':
         return {"message": "Успешно", "deals": response}
     elif request.method == 'DELETE':

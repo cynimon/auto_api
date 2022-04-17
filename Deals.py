@@ -19,3 +19,12 @@ class Deals(db.Model):
         self.dealer_id = dealer_id
         self.amount = amount
         self.summa = summa
+
+    def to_json(self):
+        result = {
+            'car': self.cars.brand,
+            'dealer': self.dealers.name,
+            'amount': self.amount,
+            'summa': self.summa
+        }
+        return result

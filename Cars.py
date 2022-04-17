@@ -18,4 +18,12 @@ class Cars(db.Model):
         self.price = price
 
     def __repr__(self):
-        return f'<Car {self.brand}'
+        return f'Car {self.brand}'
+
+    def to_json(self):
+        result = {
+            'brand': self.brand,
+            'amount': self.amount,
+            'price': self.price
+        }
+        return result
